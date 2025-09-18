@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
 const TopHitsSection = () => {
-  return (
-    <section id="games" className="bg-section-dark py-20">
+  return <section id="games" className="bg-section-dark py-20 bg-transparent">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-4xl md:text-5xl font-bold text-section-dark-foreground mb-4">
           Our Top Hits
@@ -35,8 +33,6 @@ const TopHitsSection = () => {
           </a>
         </Button>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default TopHitsSection;
