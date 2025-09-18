@@ -2,6 +2,7 @@ import { Game } from "@/types/Game";
 import GameCard from "@/components/GameCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Gamepad2, Search } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 interface GameGridProps {
   games: Game[];
@@ -67,26 +68,35 @@ const GameGrid = ({ games, loading = false, hasSearched = false, searchTerm }: G
     return <EmptyState hasSearched={hasSearched} searchTerm={searchTerm} />;
   }
 
+  const container: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.05 }
+    }
+  };
+
+  const item: Variants = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } }
+  };
+
   return (
-    <div 
+    <motion.div 
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-      style={{
-        animation: "fade-in 0.5s ease-out"
-      }}
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      // Replay animations whenever the grid re-enters the viewport
+      viewport={{ amount: 0.2, once: false }}
+      style={{ willChange: "opacity, transform" }}
     >
-      {games.map((game, index) => (
-        <div
-          key={game.id}
-          className="animate-scale-in"
-          style={{
-            animationDelay: `${index * 0.1}s`,
-            animationFillMode: "both"
-          }}
-        >
+      {games.map((game) => (
+        <motion.div key={game.id} variants={item}>
           <GameCard game={game} />
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

@@ -158,8 +158,13 @@ All colors MUST be HSL for maximum theming flexibility.
     --gradient-gaming: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(var(--gaming-purple)));
     --gradient-neon: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-pink)));
     --gradient-card: linear-gradient(135deg, hsl(224 71% 4% / 0.8), hsl(215 27.9% 16.9% / 0.4));
+        
+    --gradient-card-hover: linear-gradient(135deg, hsl(224 71% 6% / 0.9), hsl(215 27.9% 22% / 0.6));
     --gradient-button: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(var(--gaming-blue-light)));
     
+    --shadow-card: 0 8px 25px -5px hsl(210 20% 98% / 0.06), 0 0 0 1px hsl(215 27.9% 16.9% / 0.6);
+    --shadow-card-hover: 0 15px 35px -5px hsl(var(--gaming-blue) / 0.25), 0 0 0 1px hsl(var(--gaming-blue) / 0.2);
+
     /* Dark Mode Glass Effects */
     --glass-bg: hsl(0 0% 0% / 0.2);
     --glass-border: hsl(0 0% 100% / 0.1);
