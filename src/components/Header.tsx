@@ -15,29 +15,31 @@ const Header = () => {
           <span className="text-xl font-bold text-foreground">Mini Groups</span>
         </div>
         
-        <nav className="hidden md:flex items-center space-x-8">
-          <Button variant="nav-link" asChild>
-            <a href="#home">Home</a>
-          </Button>
-          <Button variant="nav-link" asChild>
-            <a href="#games">Our Games</a>
-          </Button>
-          <Button variant="nav-link" asChild>
-            <a href="#about">About Us</a>
-          </Button>
-          <Button variant="nav-link" asChild>
-            <a href="#acquisitions">Game Acquisitions</a>
-          </Button>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <Button variant="gaming" size="sm" asChild>
-            <a href="#contact" className="flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              Talk to us
-            </a>
-          </Button>
+        <div className="flex items-center gap-6">
+          <nav className="hidden md:flex items-center space-x-8">
+            <Button variant="nav-link" asChild>
+              <a href="#home">Home</a>
+            </Button>
+            <Button variant="nav-link" asChild>
+              <a href="#games">Our Games</a>
+            </Button>
+            <Button variant="nav-link" asChild>
+              <a href="#about">About Us</a>
+            </Button>
+            <Button variant="nav-link" asChild>
+              <a href="#acquisitions">Game Acquisitions</a>
+            </Button>
+          </nav>
+          
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Button variant="gaming" size="sm" asChild>
+              <a href="#contact" className="flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                Talk to us
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
     </header>
