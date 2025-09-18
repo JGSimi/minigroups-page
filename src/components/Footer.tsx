@@ -11,7 +11,7 @@ const Footer = () => {
           <span className="text-lg font-bold text-foreground">Mini Groups</span>
         </div>
         <p className="text-muted-foreground text-sm">
-          © 2024 Mini Groups. Creating amazing gaming experiences.
+          © 2025 Mini Groups. Creating amazing gaming experiences.
         </p>
       </div>
     </footer>
