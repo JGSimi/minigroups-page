@@ -47,6 +47,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Gaming Studio Theme Colors
+        "hero-bg": "hsl(var(--hero-bg))",
+        "section-dark": "hsl(var(--section-dark))",
+        "section-dark-foreground": "hsl(var(--section-dark-foreground))",
+        "gaming-blue": "hsl(var(--gaming-blue))",
+        "gaming-blue-hover": "hsl(var(--gaming-blue-hover))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
