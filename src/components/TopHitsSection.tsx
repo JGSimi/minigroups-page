@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Gamepad2, PlayCircle, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 const TopHitsSection = () => {
   return <section id="games" className="bg-muted/50 py-20">
       <div className="container mx-auto px-4 text-center">
@@ -48,10 +49,10 @@ const TopHitsSection = () => {
         </div>
 
         <Button variant="gaming" size="lg" asChild>
-          <a href="#all-games" className="flex items-center gap-2">
+          <Link to="/games" className="flex items-center gap-2">
             View all games
             <ArrowRight className="w-5 h-5" />
-          </a>
+          </Link>
         </Button>
       </div>
     </section>;
