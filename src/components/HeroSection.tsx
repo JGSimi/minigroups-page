@@ -1,9 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Gamepad2, Users, PlayCircle } from "lucide-react";
-
 const HeroSection = () => {
-  return (
-    <section id="home" className="bg-hero-bg py-20">
+  return <section id="home" className="bg-hero-bg py-20 bg-blue-300">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6">
@@ -51,8 +49,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
