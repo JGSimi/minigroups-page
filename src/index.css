@@ -2,60 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Mini Groups Design System - Gaming & Tech Focused
-All colors MUST be HSL.
+/* Mini Groups Gaming Studio - Enhanced Design System
+All colors MUST be HSL for maximum theming flexibility.
 */
 
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 0 0% 9%;
+    --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 0 0% 71%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89%;
-    --input: 0 0% 89%;
-    --ring: 217 91% 60%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
 
-    --radius: 1.5rem;
+    --radius: 1rem;
 
-    /* Gaming Studio Specific Colors */
-    --hero-bg: 0 0% 71%;
-    --section-dark: 0 0% 9%;
-    --section-dark-foreground: 0 0% 98%;
+    /* Gaming Studio Enhanced Colors */
+    --hero-bg: 220 14% 96%;
+    --section-dark: 224 71% 4%;
+    --section-dark-foreground: 210 20% 98%;
+    
+    /* Gaming Color Palette */
     --gaming-blue: 217 91% 60%;
     --gaming-blue-hover: 217 91% 55%;
+    --gaming-blue-light: 217 91% 65%;
+    --gaming-purple: 270 91% 65%;
+    --gaming-purple-hover: 270 91% 60%;
+    --gaming-cyan: 189 94% 43%;
+    --gaming-cyan-hover: 189 94% 38%;
+    --gaming-pink: 322 84% 62%;
+    --gaming-pink-hover: 322 84% 57%;
     
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--hero-bg)), hsl(var(--secondary)));
-    --gradient-cta: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(217 91% 65%));
+    /* Neon Colors */
+    --neon-blue: 217 100% 50%;
+    --neon-purple: 270 100% 60%;
+    --neon-cyan: 189 100% 50%;
+    --neon-pink: 322 100% 65%;
     
-    /* Shadows */
-    --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-button: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    /* Advanced Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 60% / 0.1), hsl(270 91% 65% / 0.1));
+    --gradient-gaming: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(var(--gaming-purple)));
+    --gradient-neon: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-pink)));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.8), hsl(240 4.8% 95.9% / 0.4));
+    --gradient-button: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(var(--gaming-blue-light)));
     
-    /* Animations */
+    /* Enhanced Shadows & Effects */
+    --shadow-card: 0 4px 6px -1px hsl(240 10% 3.9% / 0.1), 0 2px 4px -2px hsl(240 10% 3.9% / 0.1);
+    --shadow-gaming: 0 10px 30px -10px hsl(var(--gaming-blue) / 0.3);
+    --shadow-neon: 0 0 20px hsl(var(--neon-blue) / 0.5), 0 0 40px hsl(var(--neon-blue) / 0.3);
+    --shadow-elevated: 0 25px 50px -12px hsl(240 10% 3.9% / 0.25);
+    
+    /* Glass Effects */
+    --glass-bg: hsl(0 0% 100% / 0.1);
+    --glass-border: hsl(0 0% 100% / 0.2);
+    --glass-blur: blur(10px);
+    
+    /* Transitions & Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-elastic: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     --sidebar-background: 0 0% 98%;
 
@@ -75,47 +101,75 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 9%;
-    --foreground: 0 0% 98%;
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
 
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 20% 98%;
 
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 20% 98%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    --primary: 210 20% 98%;
+    --primary-foreground: 220 14% 4%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 217 91% 60%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 216 12.2% 83.9%;
 
-    --hero-bg: 0 0% 15%;
-    --section-dark: 0 0% 6%;
-    --section-dark-foreground: 0 0% 98%;
-    --gaming-blue: 217 91% 60%;
-    --gaming-blue-hover: 217 91% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Dark Theme Gaming Colors */
+    --hero-bg: 224 71% 4%;
+    --section-dark: 220 14% 2%;
+    --section-dark-foreground: 210 20% 98%;
+    
+    /* Enhanced Gaming Colors for Dark Mode */
+    --gaming-blue: 217 91% 65%;
+    --gaming-blue-hover: 217 91% 70%;
+    --gaming-blue-light: 217 91% 75%;
+    --gaming-purple: 270 91% 70%;
+    --gaming-purple-hover: 270 91% 75%;
+    --gaming-cyan: 189 94% 50%;
+    --gaming-cyan-hover: 189 94% 55%;
+    --gaming-pink: 322 84% 70%;
+    --gaming-pink-hover: 322 84% 75%;
+    
+    /* Dark Mode Neon Colors */
+    --neon-blue: 217 100% 60%;
+    --neon-purple: 270 100% 70%;
+    --neon-cyan: 189 100% 60%;
+    --neon-pink: 322 100% 75%;
+    
+    /* Dark Theme Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(217 91% 65% / 0.2), hsl(270 91% 70% / 0.2));
+    --gradient-gaming: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(var(--gaming-purple)));
+    --gradient-neon: linear-gradient(135deg, hsl(var(--neon-cyan)), hsl(var(--neon-pink)));
+    --gradient-card: linear-gradient(135deg, hsl(224 71% 4% / 0.8), hsl(215 27.9% 16.9% / 0.4));
+    --gradient-button: linear-gradient(135deg, hsl(var(--gaming-blue)), hsl(var(--gaming-blue-light)));
+    
+    /* Dark Mode Glass Effects */
+    --glass-bg: hsl(0 0% 0% / 0.2);
+    --glass-border: hsl(0 0% 100% / 0.1);
+    
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 217 91% 65%;
+    --sidebar-primary-foreground: 220 14% 4%;
+    --sidebar-accent: 215 27.9% 16.9%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 215 27.9% 16.9%;
+    --sidebar-ring: 217 91% 65%;
   }
 }
 
@@ -125,6 +179,114 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gaming-blue rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gaming-blue-hover;
+  }
+}
+
+@layer components {
+  /* Gaming Card Component */
+  .gaming-card {
+    @apply bg-card/50 backdrop-blur-md border border-white/10 rounded-2xl p-6;
+    @apply hover:border-gaming-blue/50 hover:shadow-gaming transition-all duration-300;
+    background: var(--gradient-card);
+  }
+
+  /* Glassmorphism Effect */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Neon Glow Effect */
+  .neon-glow {
+    box-shadow: var(--shadow-neon);
+  }
+
+  /* Gaming Button Glow */
+  .gaming-glow {
+    box-shadow: var(--shadow-gaming);
+  }
+
+  /* Text Gradient */
+  .text-gradient {
+    background: var(--gradient-gaming);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hero Background */
+  .hero-bg {
+    background-image: url('/assets/roblox-games-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+  }
+
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-hero);
+    backdrop-filter: blur(1px);
+  }
+
+  .hero-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Animation Classes */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 20px hsl(var(--gaming-blue) / 0.5); }
+    to { box-shadow: 0 0 30px hsl(var(--gaming-blue) / 0.8), 0 0 40px hsl(var(--gaming-blue) / 0.3); }
+  }
+
+  /* Interactive Elements */
+  .hover-lift {
+    @apply transition-all duration-300 hover:scale-105 hover:-translate-y-2;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-gaming;
   }
 }

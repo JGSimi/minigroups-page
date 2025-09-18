@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Gamepad2, PlayCircle, Users } from "lucide-react";
 const TopHitsSection = () => {
   return <section id="games" className="bg-muted/50 py-20">
       <div className="container mx-auto px-4 text-center">
@@ -13,15 +13,36 @@ const TopHitsSection = () => {
         <div className="mb-12">
           {/* Games grid would go here */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {/* Placeholder for game cards */}
-            <div className="bg-card border rounded-2xl p-6 h-64 flex items-center justify-center hover:shadow-lg transition-shadow">
-              <p className="text-muted-foreground">Game Preview</p>
+            {/* Enhanced Placeholder for game cards */}
+            <div className="gaming-card h-64 flex flex-col items-center justify-center hover-lift group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-gaming-blue/10 to-gaming-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-r from-gaming-blue to-gaming-purple rounded-full flex items-center justify-center mb-4 animate-float">
+                  <Gamepad2 className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-foreground font-semibold mb-2">Game Preview</p>
+                <p className="text-muted-foreground text-sm">Coming Soon</p>
+              </div>
             </div>
-            <div className="bg-card border rounded-2xl p-6 h-64 flex items-center justify-center hover:shadow-lg transition-shadow">
-              <p className="text-muted-foreground">Game Preview</p>
+            <div className="gaming-card h-64 flex flex-col items-center justify-center hover-lift group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-gaming-cyan/10 to-gaming-pink/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-r from-gaming-cyan to-gaming-pink rounded-full flex items-center justify-center mb-4 animate-float" style={{animationDelay: '2s'}}>
+                  <PlayCircle className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-foreground font-semibold mb-2">Game Preview</p>
+                <p className="text-muted-foreground text-sm">Coming Soon</p>
+              </div>
             </div>
-            <div className="bg-card border rounded-2xl p-6 h-64 flex items-center justify-center hover:shadow-lg transition-shadow">
-              <p className="text-muted-foreground">Game Preview</p>
+            <div className="gaming-card h-64 flex flex-col items-center justify-center hover-lift group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-gaming-purple/10 to-gaming-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-r from-gaming-purple to-gaming-blue rounded-full flex items-center justify-center mb-4 animate-float" style={{animationDelay: '4s'}}>
+                  <Users className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-foreground font-semibold mb-2">Game Preview</p>
+                <p className="text-muted-foreground text-sm">Coming Soon</p>
+              </div>
             </div>
           </div>
         </div>

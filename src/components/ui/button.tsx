@@ -15,8 +15,11 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        gaming: "bg-gaming-blue text-accent-foreground hover:bg-gaming-blue-hover shadow-lg hover:shadow-xl hover:scale-105 rounded-3xl",
-        "nav-link": "text-foreground hover:text-gaming-blue transition-colors duration-200",
+        gaming: "bg-gradient-to-r from-gaming-blue to-gaming-blue-light text-white font-semibold hover:from-gaming-blue-hover hover:to-gaming-blue shadow-gaming hover:shadow-xl hover:scale-105 rounded-full border-0",
+        "gaming-outline": "border-2 border-gaming-blue text-gaming-blue bg-transparent hover:bg-gaming-blue hover:text-white shadow-lg hover:shadow-gaming transition-all duration-300 rounded-full",
+        "gaming-neon": "bg-gradient-to-r from-neon-cyan to-neon-pink text-white font-bold hover:scale-105 shadow-lg hover:shadow-2xl rounded-full animate-pulse-glow",
+        "gaming-purple": "bg-gradient-to-r from-gaming-purple to-gaming-pink text-white font-semibold hover:from-gaming-purple-hover hover:to-gaming-pink-hover shadow-lg hover:shadow-xl hover:scale-105 rounded-full",
+        "nav-link": "text-foreground hover:text-gaming-blue transition-colors duration-300 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gaming-blue after:transition-all after:duration-300 hover:after:w-full",
       },
       size: {
         default: "h-10 px-4 py-2",
