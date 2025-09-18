@@ -35,9 +35,11 @@ const AboutSection = () => {
           <div className="order-1 lg:order-2 flex justify-center">
             <div className="w-80 h-80 bg-gaming-blue/10 rounded-3xl flex items-center justify-center border-2 border-gaming-blue/20">
               <div className="text-center">
-                <div className="w-24 h-24 bg-gaming-blue rounded-2xl mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-accent-foreground">MG</span>
-                </div>
+                <img 
+                  src="/assets/mini-groups-logo.png" 
+                  alt="Mini Groups Logo" 
+                  className="w-32 h-32 object-contain mx-auto mb-4"
+                />
                 <p className="text-xl font-bold text-foreground">Mini Groups</p>
               </div>
             </div>

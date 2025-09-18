@@ -6,10 +6,12 @@ const Header = () => {
   return (
     <header className="w-full bg-background border-b border-border/50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">M</span>
-          </div>
+        <div className="flex items-center space-x-3">
+          <img 
+            src="/assets/mini-groups-logo.png" 
+            alt="Mini Groups Logo" 
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-xl font-bold text-foreground">Mini Groups</span>
         </div>
         
