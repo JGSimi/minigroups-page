@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Header = () => {
   return (
@@ -7,9 +8,9 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">D</span>
+            <span className="text-primary-foreground font-bold text-lg">M</span>
           </div>
-          <span className="text-xl font-bold text-foreground">Do Big Studios</span>
+          <span className="text-xl font-bold text-foreground">Mini Groups</span>
         </div>
         
         <nav className="hidden md:flex items-center space-x-8">
@@ -27,12 +28,15 @@ const Header = () => {
           </Button>
         </nav>
 
-        <Button variant="gaming" size="sm" asChild>
-          <a href="#contact" className="flex items-center gap-2">
-            <Mail className="w-4 h-4" />
-            Talk to us
-          </a>
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button variant="gaming" size="sm" asChild>
+            <a href="#contact" className="flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Talk to us
+            </a>
+          </Button>
+        </div>
       </div>
     </header>
   );

@@ -5,7 +5,7 @@ const HeroSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6">
-            Do Big Studios
+            Mini Groups
           </h1>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button variant="gaming" size="lg" asChild>

@@ -36,9 +36,9 @@ const AboutSection = () => {
             <div className="w-80 h-80 bg-gaming-blue/10 rounded-3xl flex items-center justify-center border-2 border-gaming-blue/20">
               <div className="text-center">
                 <div className="w-24 h-24 bg-gaming-blue rounded-2xl mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-accent-foreground">DB</span>
+                  <span className="text-3xl font-bold text-accent-foreground">MG</span>
                 </div>
-                <p className="text-xl font-bold text-foreground">DoBig Studios</p>
+                <p className="text-xl font-bold text-foreground">Mini Groups</p>
               </div>
             </div>
           </div>
