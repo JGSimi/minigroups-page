@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Gamepad2, PlayCircle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import HoverLift from "@/components/motion/HoverLift";
 const TopHitsSection = () => {
 return <section id="games" className="bg-muted/50 py-20">
       <div className="container mx-auto px-4 text-center">
@@ -15,7 +16,7 @@ return <section id="games" className="bg-muted/50 py-20">
           {/* Games grid would go here */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {/* Enhanced Placeholder for game cards */}
-            <div className="gaming-card h-64 flex flex-col items-center justify-center hover-lift group relative overflow-hidden">
+            <HoverLift className="gaming-card h-64 flex flex-col items-center justify-center group relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-gaming-blue/10 to-gaming-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-r from-gaming-blue to-gaming-purple rounded-full flex items-center justify-center mb-4 animate-float">
@@ -24,8 +25,8 @@ return <section id="games" className="bg-muted/50 py-20">
                 <p className="text-foreground font-semibold mb-2">Game Preview</p>
                 <p className="text-muted-foreground text-sm">Coming Soon</p>
               </div>
-            </div>
-            <div className="gaming-card h-64 flex flex-col items-center justify-center hover-lift group relative overflow-hidden">
+            </HoverLift>
+<HoverLift className="gaming-card h-64 flex flex-col items-center justify-center group relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-gaming-cyan/10 to-gaming-pink/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-r from-gaming-cyan to-gaming-pink rounded-full flex items-center justify-center mb-4 animate-float" style={{animationDelay: '2s'}}>
@@ -34,8 +35,8 @@ return <section id="games" className="bg-muted/50 py-20">
                 <p className="text-foreground font-semibold mb-2">Game Preview</p>
                 <p className="text-muted-foreground text-sm">Coming Soon</p>
               </div>
-            </div>
-            <div className="gaming-card h-64 flex flex-col items-center justify-center hover-lift group relative overflow-hidden">
+</HoverLift>
+            <HoverLift className="gaming-card h-64 flex flex-col items-center justify-center group relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-gaming-purple/10 to-gaming-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="relative z-10">
                 <div className="w-16 h-16 bg-gradient-to-r from-gaming-purple to-gaming-blue rounded-full flex items-center justify-center mb-4 animate-float" style={{animationDelay: '4s'}}>
@@ -44,7 +45,7 @@ return <section id="games" className="bg-muted/50 py-20">
                 <p className="text-foreground font-semibold mb-2">Game Preview</p>
                 <p className="text-muted-foreground text-sm">Coming Soon</p>
               </div>
-            </div>
+            </HoverLift>
           </div>
         </div>
 

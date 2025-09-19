@@ -5,6 +5,7 @@ export interface Game {
   thumbnail: string;
   category: GameCategory;
   playersOnline: number;
+  visits: number;
   rating: number;
   isPopular: boolean;
   createdAt: string;

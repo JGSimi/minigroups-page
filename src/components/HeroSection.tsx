@@ -32,35 +32,19 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <div className="gaming-card text-center animate-scale-in hover-lift" style={{animationDelay: '0.6s'}}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <div className="p-3 rounded-full bg-gradient-to-r from-gaming-blue to-gaming-purple mr-3 animate-pulse-glow">
-                <Users className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-4xl md:text-5xl font-bold text-gradient">0</span>
+              <span className="text-4xl md:text-5xl font-bold text-white">999</span>
             </div>
-            <p className="text-muted-foreground font-medium">Players playing our games</p>
+            <p className="text-white font-medium">Players playing our games</p>
           </div>
           
-          <div className="gaming-card text-center animate-scale-in hover-lift" style={{animationDelay: '0.8s'}}>
+          <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <div className="p-3 rounded-full bg-gradient-to-r from-gaming-cyan to-gaming-pink mr-3 animate-pulse-glow">
-                <PlayCircle className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-4xl md:text-5xl font-bold text-gradient">0+</span>
+              <span className="text-4xl md:text-5xl font-bold text-white">999+</span>
             </div>
-            <p className="text-muted-foreground font-medium">Total play sessions</p>
-          </div>
-          
-          <div className="gaming-card text-center animate-scale-in hover-lift" style={{animationDelay: '1s'}}>
-            <div className="flex items-center justify-center mb-4">
-              <div className="p-3 rounded-full bg-gradient-to-r from-gaming-purple to-gaming-blue mr-3 animate-pulse-glow">
-                <Gamepad2 className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-4xl md:text-5xl font-bold text-gradient">0</span>
-            </div>
-            <p className="text-muted-foreground font-medium">Games in our portfolio</p>
+            <p className="text-white font-medium">Total play sessions</p>
           </div>
         </div>
       </div>

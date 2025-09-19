@@ -229,7 +229,7 @@ All colors MUST be HSL for maximum theming flexibility.
   }
 
   .gaming-card:hover {
-    @apply scale-105;
+    /* transform handled by Framer Motion now */
     background: var(--gradient-card-hover);
     box-shadow: var(--shadow-card-hover);
     border-color: hsl(var(--gaming-blue) / 0.3);

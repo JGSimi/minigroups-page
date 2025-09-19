@@ -12,8 +12,7 @@ interface GameFiltersProps {
 }
 
 const categories: GameCategory[] = [
-  'Action', 'Adventure', 'Simulator', 'RPG', 'Racing', 
-  'Horror', 'Puzzle', 'Strategy', 'Casual', 'Multiplayer'
+  'RP', 'Tycoon', 'Puzzle', 'Casual',
 ];
 
 const sortOptions: { value: SortOption; label: string }[] = [

@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import HoverLift from "@/components/motion/HoverLift";
 import { DollarSign, TrendingUp, Handshake, Zap } from "lucide-react";
 const GameAcquisitionSection = () => {
   const features = [{
@@ -29,21 +30,25 @@ return <section id="acquisitions" className="bg-muted py-20">
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {features.map((feature, index) => <Card key={index} className="p-6 hover:shadow-lg transition-shadow duration-300">
-              <div className="flex items-start space-x-4">
-                <div className="bg-gaming-blue/10 p-3 rounded-2xl">
-                  <feature.icon className="w-6 h-6 text-gaming-blue" />
+          {features.map((feature, index) => (
+            <HoverLift key={index}>
+              <Card className="p-6 transition-shadow duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-gaming-blue/10 p-3 rounded-2xl">
+                    <feature.icon className="w-6 h-6 text-gaming-blue" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-foreground mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-foreground mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            </Card>)}
+              </Card>
+            </HoverLift>
+          ))}
         </div>
 
         <div className="text-center">
