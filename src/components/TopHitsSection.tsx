@@ -1,9 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Gamepad2, PlayCircle, Users } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import HoverLift from "@/components/motion/HoverLift";
+import GameCard from "@/components/GameCard";
+import { mockGames } from "@/data/mockGames";
+
 const TopHitsSection = () => {
-return <section id="games" className="bg-muted/50 py-20">
+  const topHits = mockGames.slice(0, 3);
+
+  // Build responsive grid column classes based on item count to keep layout centered and tidy
+  const gridColsClass =
+    topHits.length === 1
+      ? "grid-cols-1"
+      : topHits.length === 2
+      ? "grid-cols-1 sm:grid-cols-2"
+      : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+
+  return (
+    <section id="games" className="bg-muted/50 py-20">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           Our Top Hits
@@ -11,41 +24,14 @@ return <section id="games" className="bg-muted/50 py-20">
         <p className="text-xl text-muted-foreground mb-12">
           Here are some of our top games
         </p>
-        
+
         <div className="mb-12">
-          {/* Games grid would go here */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {/* Enhanced Placeholder for game cards */}
-            <HoverLift className="gaming-card h-64 flex flex-col items-center justify-center group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-gaming-blue/10 to-gaming-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-r from-gaming-blue to-gaming-purple rounded-full flex items-center justify-center mb-4 animate-float">
-                  <Gamepad2 className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-foreground font-semibold mb-2">Game Preview</p>
-                <p className="text-muted-foreground text-sm">Coming Soon</p>
+          <div className={`grid ${gridColsClass} gap-6 justify-items-center mx-auto max-w-5xl`}>
+            {topHits.map((game) => (
+              <div key={game.id} className="w-full max-w-[320px]">
+                <GameCard game={game} />
               </div>
-            </HoverLift>
-<HoverLift className="gaming-card h-64 flex flex-col items-center justify-center group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-gaming-cyan/10 to-gaming-pink/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-r from-gaming-cyan to-gaming-pink rounded-full flex items-center justify-center mb-4 animate-float" style={{animationDelay: '2s'}}>
-                  <PlayCircle className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-foreground font-semibold mb-2">Game Preview</p>
-                <p className="text-muted-foreground text-sm">Coming Soon</p>
-              </div>
-</HoverLift>
-            <HoverLift className="gaming-card h-64 flex flex-col items-center justify-center group relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-gaming-purple/10 to-gaming-blue/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <div className="w-16 h-16 bg-gradient-to-r from-gaming-purple to-gaming-blue rounded-full flex items-center justify-center mb-4 animate-float" style={{animationDelay: '4s'}}>
-                  <Users className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-foreground font-semibold mb-2">Game Preview</p>
-                <p className="text-muted-foreground text-sm">Coming Soon</p>
-              </div>
-            </HoverLift>
+            ))}
           </div>
         </div>
 
@@ -56,6 +42,8 @@ return <section id="games" className="bg-muted/50 py-20">
           </Link>
         </Button>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default TopHitsSection;
