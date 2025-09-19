@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Gamepad2, PlayCircle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 const TopHitsSection = () => {
-  return <section id="games" className="bg-muted/50 py-20">
+return <section id="games" className="bg-muted/50 py-20">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           Our Top Hits

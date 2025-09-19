@@ -2,11 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Gamepad2, Users, PlayCircle } from "lucide-react";
 const HeroSection = () => {
   return (
-    <section id="home" className="hero-bg min-h-screen flex items-center py-20">
+<section id="home" className="hero-bg min-h-screen flex items-center py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-6xl md:text-8xl font-black text-gradient mb-6 animate-slide-up">
-            Mini Groups
+          <h1 className="text-6xl md:text-8xl font-black mb-6 animate-slide-up">
+            <span className="sr-only">Mini Groups</span>
+            <img
+              src="/assets/mini-groups-logo-completa.png"
+              alt="Mini Groups"
+              className="mx-auto w-[360px] max-w-[40vw] h-auto"
+            />
           </h1>
           <p className="text-xl md:text-2xl text-foreground/80 mb-8 max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
             Experience the future of Roblox gaming with our innovative and engaging game portfolio

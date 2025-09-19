@@ -19,7 +19,7 @@ const GameAcquisitionSection = () => {
     title: "Hassle-Free Transition",
     description: "Sit back and relax! We handle everything from the sale to future management, allowing you to focus on your next big idea."
   }];
-  return <section id="acquisitions" className="bg-muted py-20">
+return <section id="acquisitions" className="bg-muted py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">

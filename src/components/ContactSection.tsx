@@ -41,7 +41,7 @@ const ContactSection = () => {
       ageConfirm: false
     });
   };
-  return <section id="contact" className="bg-background py-20">
+return <section id="contact" className="bg-background py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
