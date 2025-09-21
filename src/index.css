@@ -92,6 +92,13 @@ All colors MUST be HSL for maximum theming flexibility.
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --transition-elastic: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
+    /* Hero background scroll params (light theme) */
+    --hero-scroll-duration: 60s;
+    --hero-scroll-shift: 512px;
+
+    /* Header theme fade */
+    --header-fade-duration: 400ms;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -139,6 +146,7 @@ All colors MUST be HSL for maximum theming flexibility.
     --border: 215 27.9% 16.9%;
     --input: 215 27.9% 16.9%;
     --ring: 216 12.2% 83.9%;
+
 
     /* Dark Theme Gaming Colors */
     --hero-bg: 224 71% 4%;
@@ -265,15 +273,22 @@ All colors MUST be HSL for maximum theming flexibility.
   .hero-bg {
     /* Light theme image by default (no .dark class on root) */
     background-image: url('/assets/bg-light.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-size: auto;
+    background-position: 0 0;
+    background-repeat: repeat;
     position: relative;
+    animation: hero-scroll-horizontal var(--hero-scroll-duration) linear infinite;
+    will-change: background-position;
   }
 
   /* Override for dark theme */
   .dark .hero-bg {
     background-image: url('/assets/roblox-games-bg.jpeg');
+    background-size: auto;
+    background-position: 0 0;
+    background-repeat: repeat;
+    animation: hero-scroll-horizontal var(--hero-scroll-duration) linear infinite;
+    will-change: background-position;
   }
 
   .hero-bg::before {
@@ -305,6 +320,10 @@ All colors MUST be HSL for maximum theming flexibility.
     animation: glow 2s ease-in-out infinite alternate;
   }
 
+  .animate-scroll-bounce {
+    animation: scroll-bounce 1.8s ease-in-out infinite;
+  }
+
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
@@ -315,6 +334,29 @@ All colors MUST be HSL for maximum theming flexibility.
     to { box-shadow: 0 0 30px hsl(var(--gaming-blue) / 0.8), 0 0 40px hsl(var(--gaming-blue) / 0.3); }
   }
 
+  /* Background scroll for hero (both themes) */
+  @keyframes hero-scroll-horizontal {
+    from { background-position: 0 0; }
+    to { background-position: var(--hero-scroll-shift) 0; }
+  }
+
+  /* Header theme fade overlay animations */
+  @keyframes header-theme-fade-to-dark { /* going to dark: briefly lighten then clear */
+    0% { background: hsl(0 0% 100% / 0.14); }
+    100% { background: hsl(0 0% 0% / 0); }
+  }
+  @keyframes header-theme-fade-to-light { /* going to light: briefly darken then clear */
+    0% { background: hsl(0 0% 0% / 0.12); }
+    100% { background: hsl(0 0% 0% / 0); }
+  }
+
+  /* Scroll indicator bounce */
+  @keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); opacity: 0.9; }
+    50% { transform: translateY(8px); opacity: 0.6; }
+  }
+
+
   /* Interactive Elements */
   .hover-lift {
     @apply transition-all duration-300 hover:scale-105 hover:-translate-y-2;
@@ -322,6 +364,26 @@ All colors MUST be HSL for maximum theming flexibility.
 
   .hover-glow {
     @apply transition-all duration-300 hover:shadow-gaming;
+  }
+
+  /* Header theme fade overlay (no images) */
+  .header-theme-fade {
+    position: relative;
+    overflow: hidden;
+  }
+  .header-theme-fade::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: transparent;
+  }
+  .dark .header-theme-fade::after {
+    animation: header-theme-fade-to-dark var(--header-fade-duration) ease forwards;
+  }
+  html:not(.dark) .header-theme-fade::after {
+    animation: header-theme-fade-to-light var(--header-fade-duration) ease forwards;
   }
 
 }

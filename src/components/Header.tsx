@@ -2,11 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useEffect, useState } from "react";
 
 const Header = () => {
+  const [atTop, setAtTop] = useState(true);
+
+  useEffect(() => {
+    const onScroll = () => setAtTop(window.scrollY < 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="w-full bg-background border-b border-border/50">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header
+      className={`sticky top-0 z-50 w-full border-b border-border/50 header-theme-fade transition-colors duration-300 ${
+        atTop ? "bg-background" : "bg-background/50 backdrop-blur-sm"
+      }`}
+    >
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between relative z-10">
         <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
           <img 
             src="/assets/mini-groups-logo.png" 
