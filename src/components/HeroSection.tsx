@@ -35,16 +35,16 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-4xl md:text-5xl font-bold text-white">999</span>
+              <span className="text-4xl md:text-5xl font-bold text-foreground">999</span>
             </div>
-            <p className="text-white font-medium">Players playing our games</p>
+            <p className="text-foreground font-medium">Players playing our games</p>
           </div>
           
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-4xl md:text-5xl font-bold text-white">999+</span>
+              <span className="text-4xl md:text-5xl font-bold text-foreground">999+</span>
             </div>
-            <p className="text-white font-medium">Total play sessions</p>
+            <p className="text-foreground font-medium">Total play sessions</p>
           </div>
         </div>
       </div>

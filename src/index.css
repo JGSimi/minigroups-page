@@ -26,7 +26,7 @@ All colors MUST be HSL for maximum theming flexibility.
     --secondary-foreground: 240 5.9% 10%;
 
     --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted-foreground: 240 3.8% 38%;
 
     /* Accent (light): Purple #71498F -> ~hsl(274 32% 42%) */
     --accent: 274 32% 42%;
@@ -35,9 +35,9 @@ All colors MUST be HSL for maximum theming flexibility.
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 240 5.9% 85%;
+    --input: 240 5.9% 85%;
+    --ring: 240 100% 40%;
 
     --radius: 1rem;
 
@@ -263,11 +263,17 @@ All colors MUST be HSL for maximum theming flexibility.
 
   /* Hero Background */
   .hero-bg {
-    background-image: url('/assets/roblox-games-bg.jpeg');
+    /* Light theme image by default (no .dark class on root) */
+    background-image: url('/assets/bg-light.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
+  }
+
+  /* Override for dark theme */
+  .dark .hero-bg {
+    background-image: url('/assets/roblox-games-bg.jpeg');
   }
 
   .hero-bg::before {
