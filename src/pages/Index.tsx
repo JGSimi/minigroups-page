@@ -6,10 +6,12 @@ import GameAcquisitionSection from "@/components/GameAcquisitionSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/motion/Reveal";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <SEO />
       <Header />
       <main>
         <Reveal y={40}>

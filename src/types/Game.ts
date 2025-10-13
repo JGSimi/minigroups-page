@@ -13,19 +13,13 @@ export interface Game {
   tags: string[];
   developer: string;
   featured: boolean;
+  url?: string;
 }
 
 export type GameCategory = 
   | 'Action'
-  | 'Adventure' 
-  | 'Simulator'
-  | 'RPG'
-  | 'Racing'
-  | 'Horror'
-  | 'Puzzle'
-  | 'Strategy'
   | 'Casual'
-  | 'Multiplayer';
+  | 'RP';
 
 export type SortOption = 
   | 'popular'

@@ -1,14 +1,35 @@
 import { useGames } from "@/hooks/useGames";
+import { useFavorites } from "@/hooks/useFavorites";
 import GameGrid from "@/components/GameGrid";
+import GameDetailsModal from "@/components/GameDetailsModal";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Game } from "@/types/Game";
 
 const Games = () => {
   const { games, isLoading } = useGames();
+  const { favorites, toggleFavorite } = useFavorites();
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleGameClick = (game: Game) => {
+    setSelectedGame(game);
+    setModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Browse All Games"
+        description="Explore all amazing Roblox games from Mini Groups Studio. Join millions of players in our immersive gaming experiences."
+        keywords="roblox games, mini groups games, all games, game collection, multiplayer games"
+      />
+      <Header />
       <main className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
@@ -31,8 +52,22 @@ const Games = () => {
         </div>
 
         {/* Games Grid */}
-        <GameGrid games={games} loading={isLoading} />
+        <GameGrid
+          games={games}
+          loading={isLoading}
+          onGameClick={handleGameClick}
+          favoriteIds={favorites}
+          onToggleFavorite={toggleFavorite}
+        />
       </main>
+      <Footer />
+
+      {/* Game Details Modal */}
+      <GameDetailsModal
+        game={selectedGame}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
     </div>
   );
 };

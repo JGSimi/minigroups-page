@@ -4,24 +4,25 @@ export const mockGames: Game[] = [
   {
     id: "1",
     title: "Mini City RP",
-    description: "Maior RP do roblox!",
-    thumbnail: "https://tr.rbxcdn.com/180DAY-da22381a0b46d712493261e84153ff85/256/256/Image/Webp/noFilter",
+    description: "💼 Trabalhe de Gari, Fazendeiro, Entregador, Médico, entre outros empregos. Você também pode ser Policial, e colocar ordem na cidade, ou seguir a vida do crime, e criar sua própria gangue para dominar a cidade.",
+    thumbnail: "https://tr.rbxcdn.com/180DAY-31e03c5b3b13bc4b4bf82029914393d7/768/432/Image/Webp/noFilter",
     category: "RP",
     playersOnline: 450000,
     visits: 3200000000,
     rating: 4.8,
     isPopular: true,
-    createdAt: "2019-07-14",
-    lastUpdated: "2024-01-15",
-    tags: ["roleplay", "social"],
+    createdAt: "2025-05-11",
+    lastUpdated: "2025-10-13",
+    tags: ["roleplay", "social", "city"],
     developer: "Mini Groups Studio",
-    featured: true
+    featured: true,
+    url: "https://www.roblox.com/pt/games/113494949872227/Mini-City-RP"
   },
   {
-    id: "2", 
+    id: "2",
     title: "Make A BrainRot",
-    description: "Crie seu Brainrot",
-    thumbnail: "https://tr.rbxcdn.com/180DAY-1b2f9faad3e0eec7be9f91446974d925/256/256/Image/Webp/noFilter",
+    description: "Crie seu Brainrot e explore um mundo caótico e divertido com seus amigos!",
+    thumbnail: "https://tr.rbxcdn.com/180DAY-e57ef39efc0654add0260badc5a415c0/768/432/Image/Webp/noFilter",
     category: "Action",
     playersOnline: 380000,
     visits: 2800000000,
@@ -29,8 +30,26 @@ export const mockGames: Game[] = [
     isPopular: true,
     createdAt: "2019-01-10",
     lastUpdated: "2024-01-12",
-    tags: ["adventure"],
+    tags: ["meme", "casual", "fun"],
     developer: "Mini Groups Studio",
-    featured: true
+    featured: true,
+    url: "https://www.roblox.com/pt/games/128160564290614/Make-a-Brainrot"
+  },
+  {
+    id: "3",
+    title: "Mini Shooters",
+    description: "Enter our intense and fast first-person shooter, where skill, style and chaos reign!",
+    thumbnail: "https://tr.rbxcdn.com/180DAY-fd26469cf96029dcc251c6c7e50072ed/768/432/Image/Webp/noFilter",
+    category: "Action",
+    playersOnline: 380000,
+    visits: 2800000000,
+    rating: 4.7,
+    isPopular: true,
+    createdAt: "2019-01-10",
+    lastUpdated: "2024-01-12",
+    tags: ["meme", "casual", "fun"],
+    developer: "Mini Groups Studio",
+    featured: true,
+    url: "https://www.roblox.com/pt/games/124863958602381/OPEN-BETA-Mini-Royale"
   }
 ];
