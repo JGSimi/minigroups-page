@@ -1,7 +1,7 @@
 import { Game } from "@/types/Game";
-import { Users, ExternalLink, Info, Heart } from "lucide-react";
-import { memo, useCallback, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Users, ExternalLink, Info, Heart, Sparkles } from "lucide-react";
+import { memo, useCallback, useState, useEffect } from "react";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 
 interface GameCardProps {
   game: Game;
@@ -12,6 +12,7 @@ interface GameCardProps {
 
 const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavorite }: GameCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [sparkles, setSparkles] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
 
   // 3D Tilt Effect
   const x = useMotionValue(0);
@@ -22,6 +23,10 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
 
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  // Dynamic shadow based on mouse position
+  const shadowX = useTransform(mouseXSpring, [-0.5, 0.5], ["-20px", "20px"]);
+  const shadowY = useTransform(mouseYSpring, [-0.5, 0.5], ["-20px", "20px"]);
 
   const formatNumber = useCallback((count: number) => {
     if (count >= 1_000_000_000) return `${(count / 1_000_000_000).toFixed(1)}B`;
@@ -48,13 +53,32 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
 
   const handleMouseEnter = () => {
     setIsHovered(true);
+    // Generate sparkles on hover
+    const newSparkles = Array.from({ length: 6 }, (_, i) => ({
+      id: Math.random(),
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: i * 0.1,
+    }));
+    setSparkles(newSparkles);
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+    setSparkles([]);
     x.set(0);
     y.set(0);
   };
+
+  // Counter animation effect
+  useEffect(() => {
+    if (isHovered) {
+      const timer = setTimeout(() => {
+        // Trigger counter animations
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isHovered]);
 
   const handleDetailsClick = (e: React.MouseEvent) => {
     if (onDetailsClick) {
@@ -75,15 +99,60 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
   const CardContent = () => (
     <>
       <motion.div
-        className="aspect-square overflow-hidden rounded-xl relative group"
+        className="aspect-square overflow-hidden rounded-xl relative group card-shine card-glow-border"
         style={{
           rotateX,
           rotateY,
           transformStyle: "preserve-3d",
+          boxShadow: isHovered
+            ? `${shadowX.get()} ${shadowY.get()} 40px -10px hsl(var(--gaming-blue) / 0.4)`
+            : "0 8px 25px -5px hsl(240 10% 3.9% / 0.08)",
         }}
-        whileHover={{ scale: 1.05 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        animate={{
+          boxShadow: isHovered
+            ? [
+                "0 8px 25px -5px hsl(var(--gaming-blue) / 0.2)",
+                "0 15px 40px -5px hsl(var(--gaming-purple) / 0.3)",
+                "0 8px 25px -5px hsl(var(--gaming-blue) / 0.2)",
+              ]
+            : "0 8px 25px -5px hsl(240 10% 3.9% / 0.08)",
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+          boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+        }}
       >
+        {/* Sparkle particles */}
+        <AnimatePresence>
+          {isHovered &&
+            sparkles.map((sparkle) => (
+              <motion.div
+                key={sparkle.id}
+                className="absolute pointer-events-none"
+                style={{
+                  left: `${sparkle.x}%`,
+                  top: `${sparkle.y}%`,
+                }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{
+                  scale: [0, 1, 0],
+                  opacity: [0, 1, 0],
+                  rotate: [0, 180, 360],
+                }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{
+                  duration: 1.5,
+                  delay: sparkle.delay,
+                  ease: "easeOut",
+                }}
+              >
+                <Sparkles className="w-3 h-3 text-gaming-purple" />
+              </motion.div>
+            ))}
+        </AnimatePresence>
+
         <motion.img
           src={game.thumbnail}
           alt={game.title}
@@ -93,46 +162,62 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           transition={{ duration: 0.4, ease: "easeOut" }}
         />
 
-        {/* Favorite button with animation */}
+        {/* Favorite button with enhanced animation */}
         {onToggleFavorite && (
           <motion.button
             onClick={handleFavoriteClick}
-            className="absolute top-2 right-2 p-2 bg-black/60 backdrop-blur-sm rounded-full hover:bg-black/80 z-10"
+            className="absolute top-3 right-3 p-2.5 bg-black/70 backdrop-blur-md rounded-full hover:bg-black/90 z-20 border border-white/10"
             aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.15, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+            animate={isFavorite ? {
+              boxShadow: [
+                "0 0 0 0 rgba(239, 68, 68, 0.4)",
+                "0 0 0 8px rgba(239, 68, 68, 0)",
+              ]
+            } : {}}
+            transition={{
+              boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+            }}
           >
             <motion.div
               initial={false}
-              animate={isFavorite ? { scale: [1, 1.3, 1], rotate: [0, 15, -15, 0] } : {}}
-              transition={{ duration: 0.3 }}
+              animate={isFavorite ? {
+                scale: [1, 1.2, 1],
+                rotate: [0, 10, -10, 0]
+              } : {}}
+              transition={{ duration: 0.4, ease: "backOut" }}
             >
               <Heart
-                className={`w-5 h-5 transition-all ${
+                className={`w-5 h-5 transition-all duration-300 ${
                   isFavorite
-                    ? "fill-red-500 text-red-500"
-                    : "text-white"
+                    ? "fill-red-500 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]"
+                    : "text-white/90 hover:text-white"
                 }`}
               />
             </motion.div>
           </motion.button>
         )}
 
-        {/* Hover overlay with stagger animation */}
+        {/* Enhanced hover overlay with backdrop blur */}
         <motion.div
-          className="absolute inset-0 bg-black/60 flex items-center justify-center gap-4"
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent backdrop-blur-sm flex items-center justify-center gap-5"
           initial={{ opacity: 0 }}
           whileHover={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
         >
           {game.url && (
             <motion.div
-              className="p-2 bg-primary rounded-full"
-              initial={{ scale: 0, rotate: -180 }}
-              whileInView={{ scale: 1, rotate: 0 }}
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              className="p-3 bg-primary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
+              initial={{ scale: 0, rotate: -180, y: 20 }}
+              whileInView={{ scale: 1, rotate: 0, y: 0 }}
+              whileHover={{
+                scale: 1.15,
+                rotate: 5,
+                boxShadow: "0 0 20px rgba(0, 0, 153, 0.5)",
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 18 }}
             >
               <ExternalLink className="w-6 h-6 text-primary-foreground" />
             </motion.div>
@@ -140,49 +225,115 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           {onDetailsClick && (
             <motion.button
               onClick={handleDetailsClick}
-              className="p-2 bg-secondary rounded-full"
+              className="p-3 bg-secondary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
               aria-label="View game details"
-              initial={{ scale: 0, rotate: 180 }}
-              whileInView={{ scale: 1, rotate: 0 }}
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              initial={{ scale: 0, rotate: 180, y: 20 }}
+              whileInView={{ scale: 1, rotate: 0, y: 0 }}
+              whileHover={{
+                scale: 1.15,
+                rotate: -5,
+                boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)",
+              }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 18 }}
             >
               <Info className="w-6 h-6 text-secondary-foreground" />
             </motion.button>
           )}
         </motion.div>
+
+        {/* Online status indicator */}
+        {game.playersOnline > 0 && (
+          <motion.div
+            className="absolute top-3 left-3 px-3 py-1.5 bg-green-500/90 backdrop-blur-md rounded-full flex items-center gap-1.5 border border-green-400/30 shadow-lg"
+            initial={{ scale: 0, x: -20 }}
+            animate={{ scale: 1, x: 0 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          >
+            <motion.div
+              className="w-2 h-2 bg-green-200 rounded-full"
+              animate={{
+                scale: [1, 1.3, 1],
+                opacity: [1, 0.7, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            <span className="text-xs font-semibold text-white">ONLINE</span>
+          </motion.div>
+        )}
       </motion.div>
 
       <motion.h3
-        className="text-base font-semibold text-foreground line-clamp-1"
+        className="text-base font-bold text-foreground line-clamp-1 mt-1"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
+        whileHover={{ x: 2, color: "hsl(var(--gaming-blue))" }}
+        transition={{ delay: 0.1, duration: 0.2 }}
       >
         {game.title}
       </motion.h3>
 
       <motion.div
-        className="text-xs text-muted-foreground flex items-center gap-4"
+        className="text-xs text-muted-foreground flex items-center gap-4 flex-wrap"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
         <motion.div
-          className="flex items-center gap-1"
-          whileHover={{ scale: 1.05 }}
+          className="flex items-center gap-1.5 px-2 py-1 bg-muted/50 rounded-md hover:bg-muted transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
-          <span className="font-medium text-foreground">Visits:</span>
-          <span>{formatNumber(game.visits)}</span>
+          <motion.span
+            className="font-semibold text-foreground"
+            animate={isHovered ? {
+              color: ["hsl(var(--foreground))", "hsl(var(--gaming-blue))", "hsl(var(--foreground))"]
+            } : {}}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+          >
+            Visits:
+          </motion.span>
+          <motion.span
+            className="font-medium tabular-nums"
+            animate={isHovered ? { scale: [1, 1.1, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            {formatNumber(game.visits)}
+          </motion.span>
         </motion.div>
+
         <motion.div
-          className="flex items-center gap-1"
-          whileHover={{ scale: 1.05 }}
+          className="flex items-center gap-1.5 px-2 py-1 bg-muted/50 rounded-md hover:bg-muted transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
-          <Users className="w-3.5 h-3.5" />
-          <span className="font-medium text-foreground">Playing:</span>
-          <span>{formatNumber(game.playersOnline)}</span>
+          <motion.div
+            animate={isHovered ? { rotate: [0, 10, -10, 0] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Users className="w-3.5 h-3.5 text-gaming-blue" />
+          </motion.div>
+          <motion.span
+            className="font-semibold text-foreground"
+            animate={isHovered ? {
+              color: ["hsl(var(--foreground))", "hsl(var(--gaming-purple))", "hsl(var(--foreground))"]
+            } : {}}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+          >
+            Playing:
+          </motion.span>
+          <motion.span
+            className="font-medium tabular-nums"
+            animate={isHovered ? { scale: [1, 1.1, 1] } : {}}
+            transition={{ duration: 0.3, delay: 0.05 }}
+          >
+            {formatNumber(game.playersOnline)}
+          </motion.span>
         </motion.div>
       </motion.div>
     </>
