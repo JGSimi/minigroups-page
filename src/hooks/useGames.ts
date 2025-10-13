@@ -1,15 +1,53 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Game, GameFilters, SortOption } from "@/types/Game";
 import { mockGames } from "@/data/mockGames";
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export const useGames = () => {
   const [filters, setFilters] = useState<GameFilters>({
     sortBy: 'popular'
   });
+  const [allGamesData, setAllGamesData] = useState<Game[]>(mockGames);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        console.log('[Frontend] Buscando jogos da API...');
+        const response = await fetch(`${API_URL}/api/games`);
+
+        if (!response.ok) {
+          throw new Error('Falha ao buscar jogos da API');
+        }
+
+        const data = await response.json();
+
+        if (data.success && data.data) {
+          console.log('[Frontend] Jogos carregados com sucesso:', data.data.length);
+          setAllGamesData(data.data);
+        } else {
+          throw new Error(data.error || 'Resposta inválida da API');
+        }
+      } catch (err) {
+        console.error('[Frontend] Erro ao buscar jogos, usando dados mockados:', err);
+        setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        setAllGamesData(mockGames);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGames();
+  }, []);
 
   // Filter and sort games
   const filteredAndSortedGames = useMemo(() => {
-    let filteredGames = [...mockGames];
+    let filteredGames = [...allGamesData];
 
     // Apply search filter
     if (filters.search) {
@@ -66,23 +104,23 @@ export const useGames = () => {
     });
 
     return filteredGames;
-  }, [filters]);
+  }, [filters, allGamesData]);
 
   // Get featured games (for homepage)
   const featuredGames = useMemo(() => {
-    return mockGames
+    return allGamesData
       .filter(game => game.featured)
       .sort((a, b) => b.playersOnline - a.playersOnline)
       .slice(0, 6);
-  }, []);
+  }, [allGamesData]);
 
   // Get popular games (for homepage)
   const popularGames = useMemo(() => {
-    return mockGames
+    return allGamesData
       .filter(game => game.isPopular)
       .sort((a, b) => b.playersOnline - a.playersOnline)
       .slice(0, 3);
-  }, []);
+  }, [allGamesData]);
 
   const updateFilters = (newFilters: GameFilters) => {
     setFilters(newFilters);
@@ -91,20 +129,20 @@ export const useGames = () => {
   return {
     // Data
     games: filteredAndSortedGames,
-    allGames: mockGames,
+    allGames: allGamesData,
     featuredGames,
     popularGames,
-    
+
     // Filters
     filters,
     updateFilters,
-    
+
     // Statistics
-    totalGames: mockGames.length,
+    totalGames: allGamesData.length,
     filteredGamesCount: filteredAndSortedGames.length,
-    
-    // States (for future API integration)
-    isLoading: false,
-    error: null,
+
+    // States
+    isLoading,
+    error,
   };
 };

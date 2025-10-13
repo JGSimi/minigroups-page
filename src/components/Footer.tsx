@@ -1,90 +1,145 @@
 import { Link } from "react-router-dom";
-import { Mail} from "lucide-react";
+import { Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4 },
+    },
+  };
+
   return (
-    <footer className="bg-background border-t border-border/50 py-12">
+    <motion.footer
+      className="bg-background border-t border-border/50 py-12"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+    >
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand Section */}
-          <div className="text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
-              <img
+          <motion.div
+            className="text-center md:text-left"
+            variants={itemVariants}
+          >
+            <motion.div
+              className="flex items-center justify-center md:justify-start space-x-3 mb-4"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <motion.img
                 src="/assets/mini-groups-logo.png"
                 alt="Mini Groups Logo"
                 className="w-8 h-8 object-contain"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
               />
               <span className="text-xl font-bold text-foreground">
                 Mini Groups
               </span>
-            </div>
+            </motion.div>
             <p className="text-muted-foreground text-sm max-w-xs mx-auto md:mx-0">
               Creating amazing gaming experiences for millions of players
               worldwide.
             </p>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div className="text-left">
+          <motion.div className="text-left" variants={itemVariants}>
             <h3 className="text-foreground font-semibold mb-4">Quick Links</h3>
             <nav className="space-y-2">
-              <div>
-                <Link
-                  to="/"
-                  className="text-muted-foreground hover:text-gaming-blue transition-colors text-sm"
+              {[
+                { to: "/", label: "Home" },
+                { to: "/games", label: "Our Games" },
+                { to: "#about", label: "About Us" },
+                { to: "#acquisitions", label: "Game Acquisitions" },
+              ].map((link, index) => (
+                <motion.div
+                  key={link.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  Home
-                </Link>
-              </div>
-              <div>
-                <Link
-                  to="/games"
-                  className="text-muted-foreground hover:text-gaming-blue transition-colors text-sm"
-                >
-                  Our Games
-                </Link>
-              </div>
-              <div>
-                <a
-                  href="#about"
-                  className="text-muted-foreground hover:text-gaming-blue transition-colors text-sm"
-                >
-                  About Us
-                </a>
-              </div>
-              <div>
-                <a
-                  href="#acquisitions"
-                  className="text-muted-foreground hover:text-gaming-blue transition-colors text-sm"
-                >
-                  Game Acquisitions
-                </a>
-              </div>
+                  {link.to.startsWith("#") ? (
+                    <motion.a
+                      href={link.to}
+                      className="text-muted-foreground hover:text-gaming-blue transition-colors text-sm block relative group"
+                      whileHover={{ x: 5 }}
+                    >
+                      <span className="relative">
+                        {link.label}
+                        <motion.span
+                          className="absolute bottom-0 left-0 w-0 h-0.5 bg-gaming-blue group-hover:w-full transition-all"
+                          initial={{ width: 0 }}
+                          whileHover={{ width: "100%" }}
+                        />
+                      </span>
+                    </motion.a>
+                  ) : (
+                    <Link to={link.to}>
+                      <motion.span
+                        className="text-muted-foreground hover:text-gaming-blue transition-colors text-sm block relative group"
+                        whileHover={{ x: 5 }}
+                      >
+                        <span className="relative">
+                          {link.label}
+                          <motion.span
+                            className="absolute bottom-0 left-0 w-0 h-0.5 bg-gaming-blue group-hover:w-full transition-all"
+                            initial={{ width: 0 }}
+                            whileHover={{ width: "100%" }}
+                          />
+                        </span>
+                      </motion.span>
+                    </Link>
+                  )}
+                </motion.div>
+              ))}
             </nav>
-          </div>
+          </motion.div>
 
           {/* Contact */}
-          <div className="text-left md:text-right">
+          <motion.div
+            className="text-left md:text-right"
+            variants={itemVariants}
+          >
             <div className="space-y-3">
-              <a
+              <motion.a
                 href="#contact"
                 className="inline-flex items-center gap-2 text-muted-foreground hover:text-gaming-blue transition-colors text-sm"
+                whileHover={{ scale: 1.05, x: -5 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <Mail className="w-4 h-4" />
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                >
+                  <Mail className="w-4 h-4" />
+                </motion.div>
                 Contact Us
-              </a>
+              </motion.a>
             </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-border/50 pt-6 text-center">
-          <p className="text-muted-foreground text-sm">
-            © 2025 Mini Groups LTDA.
-          </p>
+          </motion.div>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 export default Footer;

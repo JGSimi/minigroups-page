@@ -34,7 +34,7 @@ const Games = () => {
         {/* Page Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <Button variant="outline" size="icon" asChild>
+            <Button variant="nav-icon" size="icon" asChild>
               <Link to="/">
                 <ArrowLeft className="w-5 h-5" />
                 <span className="sr-only">Back to home</span>
