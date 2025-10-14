@@ -3,15 +3,58 @@ import { Gamepad2, PlayCircle, ChevronDown } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 // import HeroBackground3D from "@/components/HeroBackground3D";
 import { useGames } from "@/hooks/useGames";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 
 const HeroSection = () => {
   const [showIndicator, setShowIndicator] = useState(true);
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
   const { allGames } = useGames();
 
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  // 3D Tilt Effect for Logo
+  const logoX = useMotionValue(0);
+  const logoY = useMotionValue(0);
+
+  const logoXSpring = useSpring(logoX, { stiffness: 250, damping: 20 });
+  const logoYSpring = useSpring(logoY, { stiffness: 250, damping: 20 });
+
+  // Enhanced 3D rotations
+  const logoRotateX = useTransform(logoYSpring, [-0.5, 0.5], ["-20deg", "20deg"]);
+  const logoRotateY = useTransform(logoXSpring, [-0.5, 0.5], ["20deg", "-20deg"]);
+
+  // Z-axis translation for "lifting" effect
+  const logoTranslateZ = useTransform(
+    [logoXSpring, logoYSpring],
+    ([latestX, latestY]) => {
+      const distance = Math.sqrt(latestX * latestX + latestY * latestY);
+      return distance * 50; // Lift up to 50px
+    }
+  );
+
+  // Dynamic shadow
+  const logoShadowX = useTransform(logoXSpring, [-0.5, 0.5], ["-40px", "40px"]);
+  const logoShadowY = useTransform(logoYSpring, [-0.5, 0.5], ["-40px", "40px"]);
+  const logoShadowBlur = useTransform(
+    [logoXSpring, logoYSpring],
+    ([latestX, latestY]) => {
+      const distance = Math.sqrt(latestX * latestX + latestY * latestY);
+      return 50 + distance * 40;
+    }
+  );
+
+  // Glare effect
+  const logoGlareX = useTransform(logoXSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const logoGlareY = useTransform(logoYSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const logoGlareOpacity = useTransform(
+    [logoXSpring, logoYSpring],
+    ([latestX, latestY]) => {
+      const distance = Math.sqrt(latestX * latestX + latestY * latestY);
+      return Math.min(distance * 1, 0.5); // Max 50% opacity for hero
+    }
+  );
 
   useEffect(() => {
     const onScroll = () => setShowIndicator(window.scrollY < 8);
@@ -19,6 +62,33 @@ const HeroSection = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Mouse handlers for logo tilt
+  const handleLogoMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isLogoHovered) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    logoX.set(xPct);
+    logoY.set(yPct);
+  };
+
+  const handleLogoMouseEnter = () => {
+    setIsLogoHovered(true);
+  };
+
+  const handleLogoMouseLeave = () => {
+    setIsLogoHovered(false);
+    logoX.set(0);
+    logoY.set(0);
+  };
 
   const stats = useMemo(() => {
     const totalPlayers = allGames.reduce((sum, game) => sum + game.playersOnline, 0);
@@ -46,6 +116,10 @@ const HeroSection = () => {
         <div className="text-center mb-4">
           <motion.h1
             className="text-6xl md:text-8xl font-black mb-4"
+            style={{
+              perspective: "1200px",
+              transformStyle: "preserve-3d",
+            }}
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{
@@ -54,13 +128,52 @@ const HeroSection = () => {
             }}
           >
             <span className="sr-only">Mini Groups</span>
-            <motion.img
-              src="/assets/mini-groups-logo-completa.png"
-              alt="Mini Groups"
-              className="mx-auto w-full max-w-[280px] sm:max-w-[340px] md:max-w-[400px] h-auto"
-              whileHover={{ scale: 1.05, rotate: [0, -2, 2, -2, 0] }}
-              transition={{ duration: 0.5 }}
-            />
+            <motion.div
+              className="inline-block relative"
+              onMouseMove={handleLogoMouseMove}
+              onMouseEnter={handleLogoMouseEnter}
+              onMouseLeave={handleLogoMouseLeave}
+              style={{
+                rotateX: logoRotateX,
+                rotateY: logoRotateY,
+                translateZ: isLogoHovered ? logoTranslateZ : 0,
+                transformStyle: "preserve-3d",
+              }}
+              animate={{
+                scale: isLogoHovered ? 1.08 : 1,
+                boxShadow: isLogoHovered
+                  ? [
+                      `${logoShadowX.get()}px ${logoShadowY.get()}px ${logoShadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.4)`,
+                      `${logoShadowX.get()}px ${logoShadowY.get()}px ${logoShadowBlur.get()}px -10px hsl(var(--gaming-purple) / 0.5)`,
+                      `${logoShadowX.get()}px ${logoShadowY.get()}px ${logoShadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.4)`,
+                    ]
+                  : "0 10px 40px -10px hsl(240 10% 3.9% / 0.1)",
+              }}
+              transition={{
+                scale: { duration: 0.3 },
+                boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              {/* Dynamic glare/reflection effect */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none z-10 rounded-lg overflow-hidden"
+                style={{
+                  background: `radial-gradient(circle at ${logoGlareX.get()} ${logoGlareY.get()}, rgba(255, 255, 255, 0.9) 0%, transparent 60%)`,
+                  opacity: logoGlareOpacity,
+                  mixBlendMode: "overlay",
+                }}
+              />
+
+              <motion.img
+                src="/assets/mini-groups-logo-completa.png"
+                alt="Mini Groups"
+                className="mx-auto w-full max-w-[280px] sm:max-w-[340px] md:max-w-[400px] h-auto relative z-[1]"
+                style={{
+                  filter: isLogoHovered ? "brightness(1.1)" : "brightness(1)",
+                }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.div>
           </motion.h1>
 
           <motion.p

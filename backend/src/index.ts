@@ -5,8 +5,51 @@ import gamesRouter from './routes/games.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Configuração de CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000',
+  'http://localhost:4173',
+  'https://minigroups.vercel.app',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+console.log('[CORS] Origens permitidas:', allowedOrigins);
+console.log('[CORS] NODE_ENV:', process.env.NODE_ENV);
+
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    console.log('[CORS] Requisição de origem:', origin);
+
+    // Permite requisições sem origin (como ferramentas de teste, Postman, curl)
+    if (!origin) {
+      console.log('[CORS] Sem origin - permitindo');
+      return callback(null, true);
+    }
+
+    // Em desenvolvimento, permite qualquer origem
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[CORS] Modo desenvolvimento - permitindo todas as origens');
+      return callback(null, true);
+    }
+
+    // Permite qualquer domínio .vercel.app em produção (fallback)
+    if (origin.includes('.vercel.app')) {
+      console.log('[CORS] Domínio Vercel detectado - permitindo');
+      return callback(null, true);
+    }
+
+    // Em produção, verifica se a origem está na lista permitida
+    if (allowedOrigins.includes(origin)) {
+      console.log('[CORS] Origem na lista permitida - permitindo');
+      callback(null, true);
+    } else {
+      console.log('[CORS] Origem não permitida:', origin);
+      console.log('[CORS] Lista de origens permitidas:', allowedOrigins);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

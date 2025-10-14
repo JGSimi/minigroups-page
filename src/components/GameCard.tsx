@@ -18,15 +18,47 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+  const mouseXSpring = useSpring(x, { stiffness: 250, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 250, damping: 20 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+  // Enhanced 3D rotations with more intensity
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["-20deg", "20deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["20deg", "-20deg"]);
 
-  // Dynamic shadow based on mouse position
-  const shadowX = useTransform(mouseXSpring, [-0.5, 0.5], ["-20px", "20px"]);
-  const shadowY = useTransform(mouseYSpring, [-0.5, 0.5], ["-20px", "20px"]);
+  // Z-axis translation for "lifting" effect
+  const translateZ = useTransform(
+    [mouseXSpring, mouseYSpring],
+    ([latestX, latestY]) => {
+      const distance = Math.sqrt(latestX * latestX + latestY * latestY);
+      return distance * 40; // Lift up to 40px
+    }
+  );
+
+  // Dynamic shadow based on mouse position - more dramatic
+  const shadowX = useTransform(mouseXSpring, [-0.5, 0.5], ["-30px", "30px"]);
+  const shadowY = useTransform(mouseYSpring, [-0.5, 0.5], ["-30px", "30px"]);
+  const shadowBlur = useTransform(
+    [mouseXSpring, mouseYSpring],
+    ([latestX, latestY]) => {
+      const distance = Math.sqrt(latestX * latestX + latestY * latestY);
+      return 40 + distance * 30; // Shadow blur increases with tilt
+    }
+  );
+
+  // Glare effect position
+  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const glareOpacity = useTransform(
+    [mouseXSpring, mouseYSpring],
+    ([latestX, latestY]) => {
+      const distance = Math.sqrt(latestX * latestX + latestY * latestY);
+      return Math.min(distance * 0.8, 0.4); // Max 40% opacity
+    }
+  );
+
+  // Parallax effect for inner elements - move in opposite direction for depth
+  const parallaxX = useTransform(mouseXSpring, [-0.5, 0.5], [15, -15]);
+  const parallaxY = useTransform(mouseYSpring, [-0.5, 0.5], [15, -15]);
 
   const formatNumber = useCallback((count: number) => {
     if (count >= 1_000_000_000) return `${(count / 1_000_000_000).toFixed(1)}B`;
@@ -35,7 +67,7 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
     return count.toString();
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLAnchorElement>) => {
     if (!isHovered) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -103,17 +135,17 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
         style={{
           rotateX,
           rotateY,
+          translateZ: isHovered ? translateZ : 0,
           transformStyle: "preserve-3d",
-          boxShadow: isHovered
-            ? `${shadowX.get()} ${shadowY.get()} 40px -10px hsl(var(--gaming-blue) / 0.4)`
-            : "0 8px 25px -5px hsl(240 10% 3.9% / 0.08)",
+          perspective: "1000px",
         }}
         animate={{
+          scale: isHovered ? 1.05 : 1,
           boxShadow: isHovered
             ? [
-                "0 8px 25px -5px hsl(var(--gaming-blue) / 0.2)",
-                "0 15px 40px -5px hsl(var(--gaming-purple) / 0.3)",
-                "0 8px 25px -5px hsl(var(--gaming-blue) / 0.2)",
+                `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.3)`,
+                `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-purple) / 0.4)`,
+                `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.3)`,
               ]
             : "0 8px 25px -5px hsl(240 10% 3.9% / 0.08)",
         }}
@@ -122,8 +154,18 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           stiffness: 300,
           damping: 20,
           boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+          scale: { duration: 0.3 },
         }}
       >
+        {/* Dynamic glare/reflection effect */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background: `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255, 255, 255, 0.8) 0%, transparent 50%)`,
+            opacity: glareOpacity,
+            mixBlendMode: "overlay",
+          }}
+        />
         {/* Sparkle particles */}
         <AnimatePresence>
           {isHovered &&
@@ -162,12 +204,17 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           transition={{ duration: 0.4, ease: "easeOut" }}
         />
 
-        {/* Favorite button with enhanced animation */}
+        {/* Favorite button with enhanced animation and parallax */}
         {onToggleFavorite && (
           <motion.button
             onClick={handleFavoriteClick}
             className="absolute top-3 right-3 p-2.5 bg-black/70 backdrop-blur-md rounded-full hover:bg-black/90 z-20 border border-white/10"
             aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            style={{
+              x: parallaxX,
+              y: parallaxY,
+              translateZ: "20px",
+            }}
             whileHover={{ scale: 1.15, rotate: 5 }}
             whileTap={{ scale: 0.9 }}
             animate={isFavorite ? {
@@ -199,9 +246,9 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           </motion.button>
         )}
 
-        {/* Enhanced hover overlay with backdrop blur */}
+        {/* Enhanced hover overlay */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent backdrop-blur-sm flex items-center justify-center gap-5"
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex items-center justify-center gap-5"
           initial={{ opacity: 0 }}
           whileHover={{ opacity: 1 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
@@ -209,6 +256,11 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           {game.url && (
             <motion.div
               className="p-3 bg-primary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
+              style={{
+                x: parallaxX,
+                y: parallaxY,
+                translateZ: "30px",
+              }}
               initial={{ scale: 0, rotate: -180, y: 20 }}
               whileInView={{ scale: 1, rotate: 0, y: 0 }}
               whileHover={{
@@ -227,6 +279,11 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
               onClick={handleDetailsClick}
               className="p-3 bg-secondary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
               aria-label="View game details"
+              style={{
+                x: parallaxX,
+                y: parallaxY,
+                translateZ: "30px",
+              }}
               initial={{ scale: 0, rotate: 180, y: 20 }}
               whileInView={{ scale: 1, rotate: 0, y: 0 }}
               whileHover={{
@@ -242,10 +299,15 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           )}
         </motion.div>
 
-        {/* Online status indicator */}
+        {/* Online status indicator with parallax */}
         {game.playersOnline > 0 && (
           <motion.div
             className="absolute top-3 left-3 px-3 py-1.5 bg-green-500/90 backdrop-blur-md rounded-full flex items-center gap-1.5 border border-green-400/30 shadow-lg"
+            style={{
+              x: parallaxX,
+              y: parallaxY,
+              translateZ: "20px",
+            }}
             initial={{ scale: 0, x: -20 }}
             animate={{ scale: 1, x: 0 }}
             whileHover={{ scale: 1.05 }}
@@ -346,6 +408,10 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
         target="_blank"
         rel="noopener noreferrer"
         className="flex flex-col gap-3 cursor-pointer"
+        style={{
+          perspective: "1000px",
+          transformStyle: "preserve-3d",
+        }}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -361,6 +427,10 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
   return (
     <motion.div
       className="flex flex-col gap-3"
+      style={{
+        perspective: "1000px",
+        transformStyle: "preserve-3d",
+      }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
