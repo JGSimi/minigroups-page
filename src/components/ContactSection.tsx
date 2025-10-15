@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Send } from "lucide-react";
+import { Mail, Send, Loader2 } from "lucide-react";
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,32 +14,65 @@ const ContactSection = () => {
     message: "",
     ageConfirm: false
   });
-  const {
-    toast
-  } = useToast();
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  // URL da API - ajuste para sua URL de produção
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!formData.ageConfirm) {
       toast({
-        title: "Age Confirmation Required",
-        description: "Please confirm that you are over 13 years old.",
+        title: "Confirmação de Idade Necessária",
+        description: "Por favor, confirme que você tem mais de 13 anos.",
         variant: "destructive"
       });
       return;
     }
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you soon."
-    });
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      gameLink: "",
-      message: "",
-      ageConfirm: false
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Erro ao enviar mensagem');
+      }
+
+      toast({
+        title: "Mensagem Enviada!",
+        description: "Obrigado pelo contato. Retornaremos em breve."
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        gameLink: "",
+        message: "",
+        ageConfirm: false
+      });
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error);
+
+      toast({
+        title: "Erro ao Enviar",
+        description: error instanceof Error ? error.message : "Ocorreu um erro. Tente novamente mais tarde.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 return <section id="contact" className="bg-background py-20">
       <div className="container mx-auto px-4">
@@ -110,9 +143,18 @@ return <section id="contact" className="bg-background py-20">
                 </label>
               </div>
 
-              <Button type="submit" variant="gaming" size="lg" className="w-full">
-                <Send className="w-5 h-5 mr-2" />
-                Enviar Mensagem
+              <Button type="submit" variant="gaming" size="lg" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5 mr-2" />
+                    Enviar Mensagem
+                  </>
+                )}
               </Button>
 
               

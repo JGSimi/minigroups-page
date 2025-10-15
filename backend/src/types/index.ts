@@ -60,3 +60,19 @@ export interface GameConfig {
   category: GameCategory;
   tags: string[];
 }
+
+export interface ContactFormData {
+  name: string;
+  email: string;
+  gameLink?: string;
+  message: string;
+  ageConfirm: boolean;
+}
+
+export interface ContactFormRequest {
+  name: string;
+  email: string;
+  gameLink?: string;
+  message: string;
+  ageConfirm: boolean;
+}
