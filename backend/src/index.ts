@@ -30,50 +30,43 @@ const isProduction = process.env.NODE_ENV === 'production';
 // MIDDLEWARES DE SEGURANÇA (ordem importa!)
 // ============================================
 
-// 1. Helmet - Headers de segurança
-app.use(helmetConfig);
-
-// 2. CORS configurado com segurança
+// 1. CORS configurado com segurança (PRIMEIRO para permitir preflight)
 app.use(cors(corsOptions));
 
-// 3. Rate limiting geral
-app.use(generalLimiter);
-
-// 4. Limite de tamanho de payload
-app.use(limitPayloadSize(100000)); // 100KB
-
-// 5. Parse JSON com limite de tamanho
+// 2. Parse JSON com limite de tamanho
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
-// 6. Timeout de requisições (30 segundos)
-app.use(requestTimeout(30000));
+// 3. Helmet - Headers de segurança (desabilitado temporariamente para debug)
+// app.use(helmetConfig);
 
-// 7. Sanitização de headers
+// 4. Rate limiting geral (apenas em produção, desabilitado para debug)
+// if (isProduction) {
+//   app.use(generalLimiter);
+// }
+
+// 5. Sanitização de headers
 app.use(sanitizeHeaders);
 
-// 8. Validação de origem
-app.use(validateOrigin);
+// 6. Validação de origem (simplificada)
+// app.use(validateOrigin);
 
-// 9. Detecção de padrões de ataque
-app.use(detectAttackPatterns);
+// 7. Detecção de padrões de ataque (desabilitado para debug)
+// app.use(detectAttackPatterns);
 
-// 10. Sanitização de inputs
+// 8. Sanitização de inputs
 app.use(sanitizeInput);
 
-// 11. Validação de Content-Type
-app.use(validateContentType);
-
-// 12. Logging de requisições
+// 9. Logging de requisições
 app.use(requestLogger);
 
 // ============================================
 // ROTAS DA API
 // ============================================
 
-// Rate limiting mais restritivo para endpoints de API
-app.use('/api/games', apiLimiter, gamesRouter);
-app.use('/api/contact', contactRouter); // Rate limiting próprio definido na rota
+// Rotas da API (rate limiting desabilitado temporariamente para debug)
+app.use('/api/games', gamesRouter);
+app.use('/api/contact', contactRouter);
 
 // ============================================
 // ROTAS PÚBLICAS

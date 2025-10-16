@@ -2,6 +2,7 @@ import { Game } from "@/types/Game";
 import { Users, ExternalLink, Info, Heart, Sparkles } from "lucide-react";
 import { memo, useCallback, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GameCardProps {
   game: Game;
@@ -11,6 +12,7 @@ interface GameCardProps {
 }
 
 const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavorite }: GameCardProps) => {
+  const isMobile = useIsMobile();
   const [isHovered, setIsHovered] = useState(false);
   const [sparkles, setSparkles] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
 
@@ -68,7 +70,8 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLAnchorElement>) => {
-    if (!isHovered) return;
+    // Disable mouse tracking on mobile for better performance
+    if (isMobile || !isHovered) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
     const width = rect.width;
@@ -85,8 +88,9 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
 
   const handleMouseEnter = () => {
     setIsHovered(true);
-    // Generate sparkles on hover
-    const newSparkles = Array.from({ length: 6 }, (_, i) => ({
+    // Generate sparkles on hover - fewer on mobile for better performance
+    const sparkleCount = isMobile ? 3 : 6;
+    const newSparkles = Array.from({ length: sparkleCount }, (_, i) => ({
       id: Math.random(),
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -133,39 +137,46 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
       <motion.div
         className="aspect-square overflow-hidden rounded-xl relative group card-shine card-glow-border"
         style={{
-          rotateX,
-          rotateY,
-          translateZ: isHovered ? translateZ : 0,
-          transformStyle: "preserve-3d",
-          perspective: "1000px",
+          // Disable 3D effects on mobile for better performance
+          rotateX: isMobile ? 0 : rotateX,
+          rotateY: isMobile ? 0 : rotateY,
+          translateZ: isMobile ? 0 : (isHovered ? translateZ : 0),
+          transformStyle: isMobile ? "flat" : "preserve-3d",
+          perspective: isMobile ? "none" : "1000px",
         }}
         animate={{
-          scale: isHovered ? 1.05 : 1,
+          scale: isHovered ? (isMobile ? 1.02 : 1.05) : 1,
           boxShadow: isHovered
-            ? [
-                `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.3)`,
-                `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-purple) / 0.4)`,
-                `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.3)`,
-              ]
+            ? isMobile
+              ? "0 12px 30px -5px hsl(var(--gaming-blue) / 0.25)" // Simpler shadow on mobile
+              : [
+                  `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.3)`,
+                  `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-purple) / 0.4)`,
+                  `${shadowX.get()}px ${shadowY.get()}px ${shadowBlur.get()}px -10px hsl(var(--gaming-blue) / 0.3)`,
+                ]
             : "0 8px 25px -5px hsl(240 10% 3.9% / 0.08)",
         }}
         transition={{
           type: "spring",
           stiffness: 300,
           damping: 20,
-          boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+          boxShadow: isMobile
+            ? { duration: 0.3 }
+            : { duration: 2, repeat: Infinity, ease: "easeInOut" },
           scale: { duration: 0.3 },
         }}
       >
-        {/* Dynamic glare/reflection effect */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none z-10"
-          style={{
-            background: `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255, 255, 255, 0.8) 0%, transparent 50%)`,
-            opacity: glareOpacity,
-            mixBlendMode: "overlay",
-          }}
-        />
+        {/* Dynamic glare/reflection effect - disabled on mobile */}
+        {!isMobile && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-10"
+            style={{
+              background: `radial-gradient(circle at ${glareX.get()} ${glareY.get()}, rgba(255, 255, 255, 0.8) 0%, transparent 50%)`,
+              opacity: glareOpacity,
+              mixBlendMode: "overlay",
+            }}
+          />
+        )}
         {/* Sparkle particles */}
         <AnimatePresence>
           {isHovered &&
@@ -208,13 +219,18 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
         {onToggleFavorite && (
           <motion.button
             onClick={handleFavoriteClick}
-            className="absolute top-3 right-3 p-2.5 bg-black/70 backdrop-blur-md rounded-full hover:bg-black/90 z-20 border border-white/10"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            className="absolute top-2 md:top-3 right-2 md:right-3 bg-black/70 backdrop-blur-md rounded-full hover:bg-black/90 z-20 border border-white/10"
             style={{
-              x: parallaxX,
-              y: parallaxY,
-              translateZ: "20px",
+              // Larger touch target on mobile (min 44x44px)
+              padding: isMobile ? "10px" : "10px",
+              minWidth: isMobile ? "40px" : "auto",
+              minHeight: isMobile ? "40px" : "auto",
+              // Disable parallax on mobile
+              x: isMobile ? 0 : parallaxX,
+              y: isMobile ? 0 : parallaxY,
+              translateZ: isMobile ? "0" : "20px",
             }}
+            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
             whileHover={{ scale: 1.15, rotate: 5 }}
             whileTap={{ scale: 0.9 }}
             animate={isFavorite ? {
@@ -236,7 +252,7 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
               transition={{ duration: 0.4, ease: "backOut" }}
             >
               <Heart
-                className={`w-5 h-5 transition-all duration-300 ${
+                className={`w-4 h-4 md:w-5 md:h-5 transition-all duration-300 ${
                   isFavorite
                     ? "fill-red-500 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.6)]"
                     : "text-white/90 hover:text-white"
@@ -246,20 +262,28 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
           </motion.button>
         )}
 
-        {/* Enhanced hover overlay */}
+        {/* Enhanced hover overlay - semi-visible on mobile for better discoverability */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex items-center justify-center gap-5"
-          initial={{ opacity: 0 }}
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex items-center justify-center gap-3 md:gap-5"
+          initial={{ opacity: isMobile ? 0.5 : 0 }}
           whileHover={{ opacity: 1 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
         >
           {game.url && (
             <motion.div
-              className="p-3 bg-primary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
+              className="bg-primary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
               style={{
-                x: parallaxX,
-                y: parallaxY,
-                translateZ: "30px",
+                // Larger touch target on mobile
+                padding: isMobile ? "10px" : "12px",
+                minWidth: isMobile ? "44px" : "auto",
+                minHeight: isMobile ? "44px" : "auto",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                // Disable parallax on mobile
+                x: isMobile ? 0 : parallaxX,
+                y: isMobile ? 0 : parallaxY,
+                translateZ: isMobile ? "0" : "30px",
               }}
               initial={{ scale: 0, rotate: -180, y: 20 }}
               whileInView={{ scale: 1, rotate: 0, y: 0 }}
@@ -271,18 +295,23 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 18 }}
             >
-              <ExternalLink className="w-6 h-6 text-primary-foreground" />
+              <ExternalLink className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
             </motion.div>
           )}
           {onDetailsClick && (
             <motion.button
               onClick={handleDetailsClick}
-              className="p-3 bg-secondary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
+              className="bg-secondary/90 backdrop-blur-md rounded-full border-2 border-white/20 shadow-lg"
               aria-label="View game details"
               style={{
-                x: parallaxX,
-                y: parallaxY,
-                translateZ: "30px",
+                // Larger touch target on mobile
+                padding: isMobile ? "10px" : "12px",
+                minWidth: isMobile ? "44px" : "auto",
+                minHeight: isMobile ? "44px" : "auto",
+                // Disable parallax on mobile
+                x: isMobile ? 0 : parallaxX,
+                y: isMobile ? 0 : parallaxY,
+                translateZ: isMobile ? "0" : "30px",
               }}
               initial={{ scale: 0, rotate: 180, y: 20 }}
               whileInView={{ scale: 1, rotate: 0, y: 0 }}
@@ -294,19 +323,19 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 18 }}
             >
-              <Info className="w-6 h-6 text-secondary-foreground" />
+              <Info className="w-5 h-5 md:w-6 md:h-6 text-secondary-foreground" />
             </motion.button>
           )}
         </motion.div>
 
-        {/* Online status indicator with parallax */}
+        {/* Online status indicator with parallax - disabled on mobile */}
         {game.playersOnline > 0 && (
           <motion.div
-            className="absolute top-3 left-3 px-3 py-1.5 bg-green-500/90 backdrop-blur-md rounded-full flex items-center gap-1.5 border border-green-400/30 shadow-lg"
+            className="absolute top-2 md:top-3 left-2 md:left-3 px-2 md:px-3 py-1 md:py-1.5 bg-green-500/90 backdrop-blur-md rounded-full flex items-center gap-1 md:gap-1.5 border border-green-400/30 shadow-lg"
             style={{
-              x: parallaxX,
-              y: parallaxY,
-              translateZ: "20px",
+              x: isMobile ? 0 : parallaxX,
+              y: isMobile ? 0 : parallaxY,
+              translateZ: isMobile ? "0" : "20px",
             }}
             initial={{ scale: 0, x: -20 }}
             animate={{ scale: 1, x: 0 }}
@@ -314,7 +343,7 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
           >
             <motion.div
-              className="w-2 h-2 bg-green-200 rounded-full"
+              className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-200 rounded-full"
               animate={{
                 scale: [1, 1.3, 1],
                 opacity: [1, 0.7, 1],
@@ -325,13 +354,13 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
                 ease: "easeInOut",
               }}
             />
-            <span className="text-xs font-semibold text-white">ONLINE</span>
+            <span className="text-[10px] md:text-xs font-semibold text-white">ONLINE</span>
           </motion.div>
         )}
       </motion.div>
 
       <motion.h3
-        className="text-base font-bold text-foreground line-clamp-1 mt-1"
+        className="text-sm md:text-base font-bold text-foreground line-clamp-1 mt-1"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         whileHover={{ x: 2, color: "hsl(var(--gaming-blue))" }}
@@ -341,13 +370,13 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
       </motion.h3>
 
       <motion.div
-        className="text-xs text-muted-foreground flex items-center gap-4 flex-wrap"
+        className="text-[10px] md:text-xs text-muted-foreground flex items-center gap-2 md:gap-4 flex-wrap"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
         <motion.div
-          className="flex items-center gap-1.5 px-2 py-1 bg-muted/50 rounded-md hover:bg-muted transition-colors"
+          className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 bg-muted/50 rounded-md hover:bg-muted transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
@@ -370,7 +399,7 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
         </motion.div>
 
         <motion.div
-          className="flex items-center gap-1.5 px-2 py-1 bg-muted/50 rounded-md hover:bg-muted transition-colors"
+          className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 bg-muted/50 rounded-md hover:bg-muted transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
@@ -378,7 +407,7 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
             animate={isHovered ? { rotate: [0, 10, -10, 0] } : {}}
             transition={{ duration: 0.5 }}
           >
-            <Users className="w-3.5 h-3.5 text-gaming-blue" />
+            <Users className="w-3 h-3 md:w-3.5 md:h-3.5 text-gaming-blue" />
           </motion.div>
           <motion.span
             className="font-semibold text-foreground"
@@ -409,12 +438,13 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
         rel="noopener noreferrer"
         className="flex flex-col gap-3 cursor-pointer"
         style={{
-          perspective: "1000px",
-          transformStyle: "preserve-3d",
+          // Disable 3D perspective on mobile for better performance
+          perspective: isMobile ? "none" : "1000px",
+          transformStyle: isMobile ? "flat" : "preserve-3d",
         }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseMove={isMobile ? undefined : handleMouseMove}
+        onMouseEnter={isMobile ? undefined : handleMouseEnter}
+        onMouseLeave={isMobile ? undefined : handleMouseLeave}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -428,12 +458,13 @@ const GameCard = memo(({ game, onDetailsClick, isFavorite = false, onToggleFavor
     <motion.div
       className="flex flex-col gap-3"
       style={{
-        perspective: "1000px",
-        transformStyle: "preserve-3d",
+        // Disable 3D perspective on mobile for better performance
+        perspective: isMobile ? "none" : "1000px",
+        transformStyle: isMobile ? "flat" : "preserve-3d",
       }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={isMobile ? undefined : handleMouseMove}
+      onMouseEnter={isMobile ? undefined : handleMouseEnter}
+      onMouseLeave={isMobile ? undefined : handleMouseLeave}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

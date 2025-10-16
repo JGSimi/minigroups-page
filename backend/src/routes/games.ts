@@ -5,7 +5,8 @@ import { ApiResponse, Game } from '../types/index.js';
 
 const router = Router();
 
-router.get('/games', async (req: Request, res: Response) => {
+// GET /api/games - Lista todos os jogos
+router.get('/', async (req: Request, res: Response) => {
   try {
     console.log('[API] GET /api/games - Buscando todos os jogos');
 
@@ -42,7 +43,8 @@ router.get('/games', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/games/:placeId', async (req: Request, res: Response) => {
+// GET /api/games/:placeId - Busca jogo específico por placeId
+router.get('/:placeId', async (req: Request, res: Response) => {
   try {
     const { placeId } = req.params;
     console.log(`[API] GET /api/games/${placeId} - Buscando jogo específico`);

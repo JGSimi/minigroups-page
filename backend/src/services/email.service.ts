@@ -1,7 +1,11 @@
 import { Resend } from 'resend';
 import { logger } from '../utils/logger.js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Inicializa Resend apenas se a API key estiver disponível
+// Isso previne crashes em ambientes de desenvolvimento/teste
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 export interface ContactFormData {
   name: string;
@@ -76,6 +80,18 @@ export class EmailService {
           </body>
         </html>
       `;
+
+      // Verifica se o Resend está configurado
+      if (!resend) {
+        logger.warn('Resend API key não configurada. Email não será enviado.', {
+          to: toEmail,
+          from: email,
+        });
+        return {
+          success: false,
+          error: 'Serviço de email não configurado. Entre em contato diretamente.',
+        };
+      }
 
       // Envia o email
       const result = await resend.emails.send({

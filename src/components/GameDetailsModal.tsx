@@ -196,7 +196,7 @@ const GameDetailsModal = memo(({ game, open, onOpenChange }: GameDetailsModalPro
                       whileHover={{ scale: 1.05, y: -5 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <Button asChild className="w-full animate-pulse-glow" size="lg">
+                      <Button asChild className="w-full" size="lg">
                         <a href={game.url} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Play Now

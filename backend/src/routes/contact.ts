@@ -16,12 +16,9 @@ const contactLimiter = rateLimit({
     success: false,
     error: 'Muitas tentativas de contato. Por favor, tente novamente em 15 minutos.',
   },
-  standardHeaders: true,
+  standardHeaders: 'draft-7',
   legacyHeaders: false,
-  // Identifica por IP
-  keyGenerator: (req) => {
-    return req.ip || 'unknown';
-  },
+  skip: (req) => req.method === 'OPTIONS', // Skip CORS preflight
 });
 
 // Validações do formulário de contato

@@ -114,29 +114,6 @@ const Footer = () => {
               ))}
             </nav>
           </motion.div>
-
-          {/* Contact */}
-          <motion.div
-            className="text-left md:text-right"
-            variants={itemVariants}
-          >
-            <div className="space-y-3">
-              <motion.a
-                href="#contact"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-gaming-blue transition-colors text-sm"
-                whileHover={{ scale: 1.05, x: -5 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                >
-                  <Mail className="w-4 h-4" />
-                </motion.div>
-                Contact Us
-              </motion.a>
-            </div>
-          </motion.div>
         </div>
       </div>
     </motion.footer>
